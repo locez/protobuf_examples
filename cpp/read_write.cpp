@@ -17,20 +17,20 @@ int main(int argc, char **argv)
     // enum 枚举通过命名空间访问
     phone_number->set_type(address_book::Person::PhoneType::Person_PhoneType_HOME);
 
-    std::cout << "readable: \n"
-              << address_book.DebugString() << std::endl;
+    std::cout << "readable: \n" << address_book.DebugString() << std::endl;
     auto serialized_data = address_book.SerializeAsString();
 
     std::cout << "binary: ===\n"
               << serialized_data << "\n===\n"
-              << " length: " << serialized_data.length() << std::endl << std::endl;
+              << " length: " << serialized_data.length() << std::endl
+              << std::endl;
 
     address_book::AddressBook address_book_new;
     // 反序列化
     address_book_new.ParseFromString(serialized_data);
     std::cout << "readable: \n" << address_book_new.DebugString() << std::endl;
 
-    // repeadted 标识符的字段为 0 - n 个，访问需要遍历
+    // repeated 标识符的字段为 0 - n 个，访问需要遍历
     for (int i = 0; i < address_book_new.people_size(); i++)
     {
         auto people_new = address_book_new.people(i);

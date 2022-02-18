@@ -6,8 +6,7 @@
 
 void print(const std::string &title, const std::string &option, const std::string &content)
 {
-    std::cout << title << "  (" << option << "):\n"
-              << content << "\n\n";
+    std::cout << title << "  (" << option << "):\n" << content << "\n\n";
 }
 
 int main(int argc, char **argv)
@@ -20,7 +19,7 @@ int main(int argc, char **argv)
     std::string result;
     // 使用默认选项序列化成 json， 会忽略默认的值，如果带有 json_name 则会按照 json_name 定义的名字序列化该字段
     google::protobuf::util::MessageToJsonString(person, &result);
-    print("serailize1", "default option", result);
+    print("serialize1", "default option", result);
 
     google::protobuf::util::JsonOptions serial_options;
     // 在 field 中指定了 json_name 的选项，但是序列化时，保留原有的字段名字
@@ -52,7 +51,8 @@ int main(int argc, char **argv)
     print("serialize5", "always_print_enums_as_ints = true", result);
 
     // 这个 json 字符串多了一个 unknown_field 的字段，该字段没有在 proto 文件里面定义
-    std::string json_string = R"({"name":"locez","id":0,"email":"locez@locez.com","phone":{"phone_number":"1000000","phone_type":0,"unknown_field":0}})";
+    std::string json_string =
+        R"({"name":"locez","id":0,"email":"locez@locez.com","phone":{"phone_number":"1000000","phone_type":0,"unknown_field":0}})";
     json_person::Person p;
     auto status = google::protobuf::util::JsonStringToMessage(json_string, &p);
     if (status.ok())
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        print("deserialize1 failed", "default option", status.error_message().ToString());
+        print("deserialize1 failed", "default option", status.message().ToString());
     }
 
     google::protobuf::util::JsonParseOptions deserialize_options;
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        print("deserialize1 failed", "ignore_unknown_fields = true", status.error_message().ToString());
+        print("deserialize1 failed", "ignore_unknown_fields = true", status.message().ToString());
     }
     return 0;
 }
